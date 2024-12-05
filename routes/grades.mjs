@@ -7,6 +7,21 @@ const router = express.Router();
 // Helper function to validate ObjectId
 const isValidObjectId = (id) => /^[a-f\d]{24}$/i.test(id);
 
+router.get("/", async (req, res) => {
+  try {
+      let collection = await db.collection("grades");
+      let result = await collection.find({}).toArray();
+
+      if (result.length === 0) {
+          res.status(404).send("Not found");
+      } else {
+          res.status(200).send(result);
+      }
+  } catch (err) {
+      res.status(500).send("An error occurred while retrieving the grades");
+  }
+});
+
 // Create a single grade entry
 router.post("/", async (req, res) => {
   let collection = await db.collection("grades");
@@ -199,5 +214,6 @@ router.get(`/`, async (req, res) => {
     res.status(500).send({ error: `Failed to fetch grades` });
   }
 });
+
 
 export default router;

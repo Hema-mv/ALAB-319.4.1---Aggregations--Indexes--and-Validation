@@ -127,11 +127,6 @@ router.get("/stats", async (req, res) => {
 });
 
 //Part 2 GET /grades-agg/stats/:id
-/* 
-Create a GET route at /grades/stats/:id
-Within this route, mimic the above aggregation pipeline, 
-but only for learners within a class that has a class_id equal to the specified :id.
-*/
 
 router.get("/stats/:id", async (req, res) => {
   const classId = Number(req.params.id); // Convert class_id to number
@@ -188,19 +183,12 @@ router.get("/stats/:id", async (req, res) => {
 });
 
 //Part 2.A
-//http://localhost:5050/grades-agg/create-indexes
 //Create a single-field index on class_id.
 router.post(`/create-indexes`, async (req, res) => {
   try {
     const collection = await db.collection(`grades`);
-
-    //Create single-field index on class_id
     await collection.createIndex({ class_id: 1 });
-
-    //Create single-field index on learner_id
     await collection.createIndex({ learner_id: 1 });
-
-    //Create single-field index on learner_id and class_id
     await collection.createIndex({ learner_id: 1, class_id: 1 });
 
     res.status(200).send({ message: `Indexes created successfully` });
